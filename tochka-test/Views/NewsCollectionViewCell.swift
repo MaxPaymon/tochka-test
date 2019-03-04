@@ -26,7 +26,7 @@ class NewsCollectionViewCell : UICollectionViewCell {
     
     let titleView : UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
+        label.font = UIFont(name: "HelveticaNeue-Bold", size: 14)
         label.textColor = UIColor.white.withAlphaComponent(0.9)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 2
@@ -38,13 +38,24 @@ class NewsCollectionViewCell : UICollectionViewCell {
         label.font = UIFont(name: "HelveticaNeue-Light", size: 12)
         label.textColor = UIColor.white.withAlphaComponent(0.7)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         return label
+    }()
+    
+    let picture : UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.backgroundColor = UIColor.blue.withAlphaComponent(0.2)
+        image.layer.cornerRadius = 8
+        return image
     }()
     
     func setViews() {
         addSubview(cardView)
         setCardViewConstraints()
+        
+        cardView.addSubview(picture)
+        setPictureConstraints()
         
         cardView.addSubview(titleView)
         setTitleViewConstraints()
@@ -54,27 +65,35 @@ class NewsCollectionViewCell : UICollectionViewCell {
     }
     
     func setCardViewConstraints() {
-        let cardViewLeading = NSLayoutConstraint(item: cardView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
-        let cardViewTrailing = NSLayoutConstraint(item: cardView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailingMargin, multiplier: 1.0, constant: 0)
-        let cardViewBottom = NSLayoutConstraint(item: cardView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 4)
-        let cardViewTop = NSLayoutConstraint(item: cardView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 4)
-        NSLayoutConstraint.activate([cardViewLeading, cardViewTrailing, cardViewBottom, cardViewTop])
+        let leading = NSLayoutConstraint(item: cardView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
+        let trailing = NSLayoutConstraint(item: cardView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailingMargin, multiplier: 1.0, constant: 0)
+        let bottom = NSLayoutConstraint(item: cardView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 4)
+        let top = NSLayoutConstraint(item: cardView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 4)
+        NSLayoutConstraint.activate([leading, trailing, bottom, top])
     }
     
     func setTitleViewConstraints() {
-        let titleViewLeading = NSLayoutConstraint(item: titleView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
-        let titleViewTrailing = NSLayoutConstraint(item: titleView, attribute: .trailing, relatedBy: .equal, toItem: cardView, attribute: .trailingMargin, multiplier: 1.0, constant: 0)
-        let titleViewTop = NSLayoutConstraint(item: titleView, attribute: .top, relatedBy: .equal, toItem: cardView, attribute: .top, multiplier: 1.0, constant: 4)
-        NSLayoutConstraint.activate([titleViewLeading, titleViewTrailing, titleViewTop])
+        let leading = NSLayoutConstraint(item: titleView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
+        let trailing = NSLayoutConstraint(item: titleView, attribute: .trailing, relatedBy: .equal, toItem: picture, attribute: .leading, multiplier: 1.0, constant: -8)
+        let top = NSLayoutConstraint(item: titleView, attribute: .top, relatedBy: .equal, toItem: cardView, attribute: .top, multiplier: 1.0, constant: 8)
+        NSLayoutConstraint.activate([leading, trailing, top])
     }
     
     func setSubTitleViewConstraints() {
-        let subTitleViewLeading = NSLayoutConstraint(item: subTitleView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
-        let subTitleViewTrailing = NSLayoutConstraint(item: subTitleView, attribute: .trailing, relatedBy: .equal, toItem: cardView, attribute: .trailingMargin, multiplier: 1.0, constant: 0)
-        let subTitleViewTop = NSLayoutConstraint(item: subTitleView, attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .bottom, multiplier: 1.0, constant: 4)
-        NSLayoutConstraint.activate([subTitleViewLeading, subTitleViewTrailing, subTitleViewTop])
+        let leading = NSLayoutConstraint(item: subTitleView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
+        let trailing = NSLayoutConstraint(item: subTitleView, attribute: .trailing, relatedBy: .equal, toItem: picture, attribute: .leading, multiplier: 1.0, constant: -8)
+        let top = NSLayoutConstraint(item: subTitleView, attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .bottom, multiplier: 1.0, constant: 4)
+        let bottom = NSLayoutConstraint(item: subTitleView, attribute: .bottom, relatedBy: .equal, toItem: cardView, attribute: .bottomMargin, multiplier: 1.0, constant: 0)
+        NSLayoutConstraint.activate([leading, trailing, top, bottom])
     }
     
+    func setPictureConstraints() {
+        let trailing = NSLayoutConstraint(item: picture, attribute: .trailing, relatedBy: .equal, toItem: cardView, attribute: .trailingMargin, multiplier: 1.0, constant: 0)
+        let height = NSLayoutConstraint(item: picture, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 80)
+        let width = NSLayoutConstraint(item: picture, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 80)
+        let vartical = NSLayoutConstraint(item: picture, attribute: .centerY, relatedBy: .equal, toItem: cardView, attribute: .centerY, multiplier: 1.0, constant: 0)
+        NSLayoutConstraint.activate([trailing, height, width, vartical])
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("couldn't init News Cell (init: coder)")
