@@ -55,7 +55,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
 
     func setLayoutOptions() {
-        collectionView.backgroundColor = UIColor.white
+        collectionView.backgroundColor = UIColor.white.withAlphaComponent(0.9)
         navigationController?.navigationBar.barStyle = .black
         self.title = "Новости"
     }
