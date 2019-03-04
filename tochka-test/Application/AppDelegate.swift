@@ -19,7 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-        window?.rootViewController = MainViewController()
+        let flowLayout = UICollectionViewFlowLayout()
+        let mainViewController = MainViewController(collectionViewLayout: flowLayout)
+        
+        window?.rootViewController = UINavigationController(rootViewController: mainViewController)
         
         return true
     }
