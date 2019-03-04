@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class NewsCell : UICollectionViewCell {
+class NewsCollectionViewCell : UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,7 +29,7 @@ class NewsCell : UICollectionViewCell {
         label.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
         label.textColor = UIColor.white.withAlphaComponent(0.9)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
+        label.numberOfLines = 2
         return label
     }()
     
@@ -38,7 +38,7 @@ class NewsCell : UICollectionViewCell {
         label.font = UIFont(name: "HelveticaNeue-Light", size: 12)
         label.textColor = UIColor.white.withAlphaComponent(0.7)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 2
+        label.numberOfLines = 1
         return label
     }()
     

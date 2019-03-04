@@ -11,7 +11,9 @@
 		B0492582222D854A00BDECD8 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0492581222D854A00BDECD8 /* MainViewController.swift */; };
 		B0492588222D854A00BDECD8 /* tochka_test.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0492586222D854A00BDECD8 /* tochka_test.xcdatamodeld */; };
 		B049258A222D854C00BDECD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0492589222D854C00BDECD8 /* Assets.xcassets */; };
-		B049259A222D913200BDECD8 /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0492599222D913200BDECD8 /* NewsCell.swift */; };
+		B049259A222D913200BDECD8 /* NewsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0492599222D913200BDECD8 /* NewsCollectionViewCell.swift */; };
+		B04925A0222DA42900BDECD8 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = B049259F222DA42900BDECD8 /* Api.swift */; };
+		B04925A2222DA43600BDECD8 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04925A1222DA43600BDECD8 /* UIImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +23,9 @@
 		B0492587222D854A00BDECD8 /* tochka_test.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = tochka_test.xcdatamodel; sourceTree = "<group>"; };
 		B0492589222D854C00BDECD8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B049258E222D854C00BDECD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B0492599222D913200BDECD8 /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
+		B0492599222D913200BDECD8 /* NewsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewCell.swift; sourceTree = "<group>"; };
+		B049259F222DA42900BDECD8 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
+		B04925A1222DA43600BDECD8 /* UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 		B049257E222D854A00BDECD8 /* tochka-test */ = {
 			isa = PBXGroup;
 			children = (
+				B049259C222DA3F300BDECD8 /* Helper */,
+				B049259B222DA34200BDECD8 /* Views */,
 				B0492596222D85D000BDECD8 /* Controllers */,
 				B0492595222D85C200BDECD8 /* Resources */,
 				B0492594222D856E00BDECD8 /* Application */,
@@ -83,9 +89,41 @@
 			isa = PBXGroup;
 			children = (
 				B0492581222D854A00BDECD8 /* MainViewController.swift */,
-				B0492599222D913200BDECD8 /* NewsCell.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		B049259B222DA34200BDECD8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B0492599222D913200BDECD8 /* NewsCollectionViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B049259C222DA3F300BDECD8 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				B049259E222DA41100BDECD8 /* Network */,
+				B049259D222DA3FA00BDECD8 /* Extension */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		B049259D222DA3FA00BDECD8 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				B04925A1222DA43600BDECD8 /* UIImageView.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		B049259E222DA41100BDECD8 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				B049259F222DA42900BDECD8 /* Api.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,7 +197,9 @@
 			files = (
 				B0492582222D854A00BDECD8 /* MainViewController.swift in Sources */,
 				B0492588222D854A00BDECD8 /* tochka_test.xcdatamodeld in Sources */,
-				B049259A222D913200BDECD8 /* NewsCell.swift in Sources */,
+				B049259A222D913200BDECD8 /* NewsCollectionViewCell.swift in Sources */,
+				B04925A0222DA42900BDECD8 /* Api.swift in Sources */,
+				B04925A2222DA43600BDECD8 /* UIImageView.swift in Sources */,
 				B0492580222D854A00BDECD8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
