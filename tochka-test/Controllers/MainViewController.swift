@@ -11,6 +11,7 @@ import UIKit
 class MainViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
     private let searchBarHeight = 40
+    private let cellIdentifier = "newsCell"
     
     private var searchBar : UISearchBar!
 
@@ -18,6 +19,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         super.viewDidLoad()
         
         setSearchBar()
+        collectionView?.register(NewsCell.self, forCellWithReuseIdentifier: cellIdentifier)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -28,8 +30,24 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
     }
     
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? NewsCell else {
+            return UICollectionViewCell()
+        }
+        
+        return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 140)
+        return CGSize(width: view.bounds.width, height: 80)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: view.bounds.width, height: CGFloat(searchBarHeight))
     }
 
     func setLayoutOptions() {
@@ -42,6 +60,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 40))
         searchBar.backgroundImage = UIImage()
         searchBar.barStyle = .blackTranslucent
+        searchBar.placeholder = "Поиск новостей"
         collectionView.addSubview(searchBar)
     }
 }
