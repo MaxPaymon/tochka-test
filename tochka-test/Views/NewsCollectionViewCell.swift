@@ -33,7 +33,7 @@ class NewsCollectionViewCell : UICollectionViewCell {
         return label
     }()
     
-    let subTitleView : UILabel = {
+    let descriptionView : UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "HelveticaNeue-Light", size: 12)
         label.textColor = UIColor.white.withAlphaComponent(0.7)
@@ -60,8 +60,8 @@ class NewsCollectionViewCell : UICollectionViewCell {
         cardView.addSubview(titleView)
         setTitleViewConstraints()
         
-        cardView.addSubview(subTitleView)
-        setSubTitleViewConstraints()
+        cardView.addSubview(descriptionView)
+        setDescriptionViewConstraints()
     }
     
     func setCardViewConstraints() {
@@ -79,11 +79,11 @@ class NewsCollectionViewCell : UICollectionViewCell {
         NSLayoutConstraint.activate([leading, trailing, top])
     }
     
-    func setSubTitleViewConstraints() {
-        let leading = NSLayoutConstraint(item: subTitleView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
-        let trailing = NSLayoutConstraint(item: subTitleView, attribute: .trailing, relatedBy: .equal, toItem: picture, attribute: .leading, multiplier: 1.0, constant: -8)
-        let top = NSLayoutConstraint(item: subTitleView, attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .bottom, multiplier: 1.0, constant: 4)
-        let bottom = NSLayoutConstraint(item: subTitleView, attribute: .bottom, relatedBy: .equal, toItem: cardView, attribute: .bottomMargin, multiplier: 1.0, constant: 0)
+    func setDescriptionViewConstraints() {
+        let leading = NSLayoutConstraint(item: descriptionView, attribute: .leading, relatedBy: .equal, toItem: cardView, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
+        let trailing = NSLayoutConstraint(item: descriptionView, attribute: .trailing, relatedBy: .equal, toItem: picture, attribute: .leading, multiplier: 1.0, constant: -8)
+        let top = NSLayoutConstraint(item: descriptionView, attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .bottom, multiplier: 1.0, constant: 4)
+        let bottom = NSLayoutConstraint(item: descriptionView, attribute: .bottom, relatedBy: .equal, toItem: cardView, attribute: .bottomMargin, multiplier: 1.0, constant: 0)
         NSLayoutConstraint.activate([leading, trailing, top, bottom])
     }
     

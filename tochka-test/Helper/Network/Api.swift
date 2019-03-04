@@ -10,4 +10,8 @@ import Foundation
 
 class Api {
     
+    func getNews(pageSize : Int, completionHandler: @escaping (String) -> ()) {
+        
+    }
+    
 }

@@ -15,6 +15,7 @@
 		B04925A0222DA42900BDECD8 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = B049259F222DA42900BDECD8 /* Api.swift */; };
 		B04925A2222DA43600BDECD8 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04925A1222DA43600BDECD8 /* UIImageView.swift */; };
 		B04925A5222DACF400BDECD8 /* NewsUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04925A4222DACF400BDECD8 /* NewsUrl.swift */; };
+		B04925A8222DB1F900BDECD8 /* NewsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04925A7222DB1F900BDECD8 /* NewsData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		B049259F222DA42900BDECD8 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		B04925A1222DA43600BDECD8 /* UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
 		B04925A4222DACF400BDECD8 /* NewsUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsUrl.swift; sourceTree = "<group>"; };
+		B04925A7222DB1F900BDECD8 /* NewsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				B049259C222DA3F300BDECD8 /* Helper */,
+				B04925A6222DB1D800BDECD8 /* Models */,
 				B049259B222DA34200BDECD8 /* Views */,
 				B0492596222D85D000BDECD8 /* Controllers */,
 				B0492595222D85C200BDECD8 /* Resources */,
@@ -127,6 +130,14 @@
 				B04925A4222DACF400BDECD8 /* NewsUrl.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		B04925A6222DB1D800BDECD8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B04925A7222DB1F900BDECD8 /* NewsData.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,6 +209,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B04925A8222DB1F900BDECD8 /* NewsData.swift in Sources */,
 				B0492582222D854A00BDECD8 /* MainViewController.swift in Sources */,
 				B0492588222D854A00BDECD8 /* tochka_test.xcdatamodeld in Sources */,
 				B049259A222D913200BDECD8 /* NewsCollectionViewCell.swift in Sources */,
