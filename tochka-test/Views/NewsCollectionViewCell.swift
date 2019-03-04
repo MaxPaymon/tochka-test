@@ -47,6 +47,8 @@ class NewsCollectionViewCell : UICollectionViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         image.backgroundColor = UIColor.blue.withAlphaComponent(0.2)
         image.layer.cornerRadius = 8
+        image.layer.masksToBounds = true
+        image.contentMode = .scaleAspectFill
         return image
     }()
     
@@ -67,7 +69,7 @@ class NewsCollectionViewCell : UICollectionViewCell {
     func setCardViewConstraints() {
         let leading = NSLayoutConstraint(item: cardView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leadingMargin, multiplier: 1.0, constant: 0)
         let trailing = NSLayoutConstraint(item: cardView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailingMargin, multiplier: 1.0, constant: 0)
-        let bottom = NSLayoutConstraint(item: cardView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 4)
+        let bottom = NSLayoutConstraint(item: cardView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -4)
         let top = NSLayoutConstraint(item: cardView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 4)
         NSLayoutConstraint.activate([leading, trailing, bottom, top])
     }

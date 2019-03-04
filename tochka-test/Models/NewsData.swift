@@ -9,7 +9,7 @@
 import Foundation
 
 class NewsData : Codable {
-    var articles : NewsArticles!
+    var articles : [NewsArticles] = []
 }
 
 class NewsArticles : Codable {

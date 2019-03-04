@@ -14,6 +14,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     private let cellIdentifier = "newsCell"
     
     private var searchBar : UISearchBar!
+    
+    var news : NewsData = NewsData()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +29,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
+        let api = Api()
+        api.getNews(pageSize: 10) { news in
+            self.news = news
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -35,11 +43,16 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             return UICollectionViewCell()
         }
         
+        let info = news.articles[indexPath.row]
+        cell.titleView.text = info.title
+        cell.descriptionView.text = info.description
+        cell.picture.setImage(from: info.urlToImage)
+        
         return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return news.articles.count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

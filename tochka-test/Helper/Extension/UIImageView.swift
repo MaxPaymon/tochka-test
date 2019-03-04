@@ -10,7 +10,13 @@ import Foundation
 import UIKit
 
 extension UIImageView {
-    func setImage(from url: URL) {
+    func setImage(from url: String) {
+        
+        guard let url = URL(string: url) else {
+            print("Couldn't create URL")
+            return
+        }
+        
         URLSession.shared.dataTask(with: url) { data, _, error  in
             if let data = data {
                 let image = UIImage(data: data)
