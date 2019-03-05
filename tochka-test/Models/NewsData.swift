@@ -16,4 +16,5 @@ class NewsArticles : Codable {
     var title : String!
     var description : String!
     var urlToImage : String!
+    var publishedAt : String!
 }
