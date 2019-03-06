@@ -16,19 +16,22 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 
     private var newsLoaded: NSObjectProtocol!
     
+    private let progress = UIActivityIndicatorView()
     private var searchBar : UISearchBar!
     
     private let cacheManager = CacheManager()
     
     private var news : [News] = []
     private var filteredNews : [News] = []
+    
+    private var isLoading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setNotification()
         setSearchBar()
-        
+        setProgress()
         collectionView?.register(NewsCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
 
     }
@@ -65,6 +68,17 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         return CGSize(width: view.bounds.width, height: 100)
     }
     
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+        
+        if (maximumOffset - contentOffset == 0) && !isLoading {
+            cacheManager.page += 1
+            isLoading = true
+            cacheManager.fetchNews()
+        }
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredNews = searchText.isEmpty ? news : news.filter { (item: News) -> Bool in
             return item.title!.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
@@ -93,7 +107,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         searchBar.frame = CGRect(x: 0, y: 0, width: size.width, height: CGFloat(searchBarHeight))
     }
 
-    func setLayoutOptions() {
+    private func setLayoutOptions() {
         collectionView.backgroundColor = UIColor.white.withAlphaComponent(0.9)
         
         navigationController?.navigationBar.barStyle = .black
@@ -116,9 +130,29 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             self.news = self.cacheManager.newsList
             self.filteredNews = self.news
+            self.isLoading = false
             DispatchQueue.main.async {
+                if !self.news.isEmpty {
+                    self.stopProgress()
+                }
                 self.collectionView.reloadData()
             }
+        }
+    }
+    
+    private func setProgress() {
+        progress.center = collectionView.center
+        progress.hidesWhenStopped = true
+        progress.color = .blue
+        collectionView.addSubview(progress)
+        DispatchQueue.main.async {
+            self.progress.startAnimating()
+        }
+    }
+    
+    private func stopProgress() {
+        DispatchQueue.main.async {
+            self.progress.stopAnimating()
         }
     }
 }

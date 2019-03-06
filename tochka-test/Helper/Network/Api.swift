@@ -10,8 +10,8 @@ import Foundation
 
 class Api {
     
-    func getNews(pageSize : Int, completionHandler: @escaping (NewsData) -> ()) {
-        let urlString = NewsUrl.shared.getNewsUrl(pageSize: pageSize)
+    func getNews(page : Int, completionHandler: @escaping (NewsData) -> ()) {
+        let urlString = NewsUrl.shared.getNewsUrl(page: page)
         
         guard let url = URL(string: urlString) else {
             print("Couldn't create URL")

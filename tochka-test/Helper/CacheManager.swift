@@ -20,6 +20,7 @@ class CacheManager {
     
     private let entityNewsName = "News"
     private let api = Api()
+    private let itemsPageCount = 20
     
     private let dateFormatter : DateFormatter = {
         let formatter = DateFormatter()
@@ -29,7 +30,7 @@ class CacheManager {
     
     private var managedContext : NSManagedObjectContext!
     
-    var pageSize = 20
+    var page = 1
     
     var newsList : [News] = [] {
         didSet {
@@ -47,8 +48,8 @@ class CacheManager {
         
     }
     
-    private func loadNews(pageSize: Int) {
-        api.getNews(pageSize: pageSize) { news in
+    private func loadNews(page: Int) {
+        api.getNews(page: page) { news in
             self.saveNews(articles: news.articles)
         }
     }
@@ -62,7 +63,7 @@ class CacheManager {
             }
         }
         
-        fetchNews()
+        fetchAllNews()
     }
     
     private func getExistNews(article : NewsArticles) -> News? {
@@ -98,20 +99,33 @@ class CacheManager {
         let timestamp = getTimestampFromDate(dateString: article.publishedAt)
         
         news.setValue(timestamp, forKey: NewsKeys.date)
-        saveManagedContext()
+        self.saveManagedContext()
         
     }
     
-    func fetchNews() {
+    private func fetchAllNews() {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityNewsName)
-        fetchRequest.fetchLimit = pageSize
         fetchRequest.sortDescriptors = [NSSortDescriptor.init(key: NewsKeys.date, ascending: false)]
         do {
             let result = try managedContext.fetch(fetchRequest) as! [News]
-            if result.count == pageSize {
+            newsList = result
+        } catch let error {
+            print("Error fetch news: ", error)
+        }
+    }
+    
+    func fetchNews() {
+        let resultCount = page * itemsPageCount
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityNewsName)
+        fetchRequest.fetchLimit = resultCount
+        fetchRequest.sortDescriptors = [NSSortDescriptor.init(key: NewsKeys.date, ascending: false)]
+        do {
+            let result = try managedContext.fetch(fetchRequest) as! [News]
+
+            if result.count == resultCount {
                 newsList = result
             } else {
-                loadNews(pageSize: pageSize)
+                loadNews(page: page)
             }
         } catch let error {
             print("Error fetch news: ", error)
