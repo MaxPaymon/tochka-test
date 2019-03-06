@@ -9,21 +9,32 @@
 import Foundation
 import UIKit
 
+let imageCache = NSCache<AnyObject, AnyObject>()
+
 extension UIImageView {
-    func setImage(from url: String) {
-        
-        guard let url = URL(string: url) else {
-            print("Couldn't create URL")
+    func setImage(from urlString: String) {
+        guard let url = URL(string: urlString) else {
+            DispatchQueue.main.async {
+                self.image = nil
+            }
             return
         }
         
-        URLSession.shared.dataTask(with: url) { data, _, error  in
-            if let data = data {
-                let image = UIImage(data: data)
-                DispatchQueue.main.async {
-                    self.image = image
-                }
+        if let imageFromCache = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
+            DispatchQueue.main.async {
+                self.image = imageFromCache
             }
-        }.resume()
+        } else {
+            URLSession.shared.dataTask(with: url) { data, _, error  in
+                if let data = data {
+                    if let image = UIImage(data: data) {
+                        imageCache.setObject(image, forKey: urlString as AnyObject)
+                        DispatchQueue.main.async {
+                            self.image = image
+                        }
+                    }
+                }
+            }.resume()
+        }
     }
 }

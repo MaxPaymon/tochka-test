@@ -7,19 +7,30 @@
 //
 
 import UIKit
+import CoreData
 
 class MainViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
     private let searchBarHeight = 40
     private let cellIdentifier = "newsCell"
+
+    private var newsLoaded: NSObjectProtocol!
     
     private var searchBar : UISearchBar!
+    
+    private let cacheManager = CacheManager()
+    
+    private var news : [News] = []
+    private var filteredNews : [News] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setNotification()
         setSearchBar()
+        
         collectionView?.register(NewsCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -27,50 +38,88 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        let cache = CacheManager()
+        cacheManager.fetchNews()
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? NewsCollectionViewCell else {
             return UICollectionViewCell()
         }
-//
-//        let info = news.articles[indexPath.row]
-//        cell.titleView.text = info.title
-//        cell.descriptionView.text = info.description
-//        cell.picture.setImage(from: info.urlToImage)
-//
+
+        guard let info = filteredNews[indexPath.row] as News? else {
+            return UICollectionViewCell()
+        }
+        
+        cell.titleView.text = info.title
+        cell.descriptionView.text = info.descript
+        cell.picture.setImage(from: info.pictureUrl ?? "")
+        
         return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return filteredNews.count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.bounds.width, height: 100)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.bounds.width, height: CGFloat(searchBarHeight))
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredNews = searchText.isEmpty ? news : news.filter { (item: News) -> Bool in
+            return item.title!.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        }
+        
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        filteredNews = news
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        searchBar.frame = CGRect(x: 0, y: 0, width: size.width, height: 40)
+        searchBar.frame = CGRect(x: 0, y: 0, width: size.width, height: CGFloat(searchBarHeight))
     }
 
     func setLayoutOptions() {
         collectionView.backgroundColor = UIColor.white.withAlphaComponent(0.9)
+        
         navigationController?.navigationBar.barStyle = .black
+        view.backgroundColor = .blue
+
         self.title = "Новости"
     }
-    
-    func setSearchBar() {
+
+    private func setSearchBar() {
         searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 40))
         searchBar.backgroundImage = UIImage()
         searchBar.barStyle = .blackTranslucent
         searchBar.placeholder = "Поиск новостей"
-        collectionView.addSubview(searchBar)
+        searchBar.delegate = self
+        navigationItem.titleView = searchBar
+    }
+    
+    private func setNotification() {
+        newsLoaded = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newsLoaded"), object: nil, queue: nil) { _ in
+            
+            self.news = self.cacheManager.newsList
+            self.filteredNews = self.news
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
 }
 
