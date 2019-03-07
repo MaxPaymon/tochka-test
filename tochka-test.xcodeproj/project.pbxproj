@@ -17,6 +17,7 @@
 		B04925A5222DACF400BDECD8 /* NewsUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04925A4222DACF400BDECD8 /* NewsUrl.swift */; };
 		B04925A8222DB1F900BDECD8 /* NewsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04925A7222DB1F900BDECD8 /* NewsData.swift */; };
 		B0E11267222E6DEA009FA27F /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E11266222E6DEA009FA27F /* CacheManager.swift */; };
+		B0E112CF22311BB8009FA27F /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E112CE22311BB8009FA27F /* UserDefaults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		B04925A4222DACF400BDECD8 /* NewsUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsUrl.swift; sourceTree = "<group>"; };
 		B04925A7222DB1F900BDECD8 /* NewsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsData.swift; sourceTree = "<group>"; };
 		B0E11266222E6DEA009FA27F /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		B0E112CE22311BB8009FA27F /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				B049259E222DA41100BDECD8 /* Network */,
 				B049259D222DA3FA00BDECD8 /* Extension */,
 				B0E11266222E6DEA009FA27F /* CacheManager.swift */,
+				B0E112CE22311BB8009FA27F /* UserDefaults.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 				B0492588222D854A00BDECD8 /* tochka_test.xcdatamodeld in Sources */,
 				B049259A222D913200BDECD8 /* NewsCollectionViewCell.swift in Sources */,
 				B04925A0222DA42900BDECD8 /* Api.swift in Sources */,
+				B0E112CF22311BB8009FA27F /* UserDefaults.swift in Sources */,
 				B04925A5222DACF400BDECD8 /* NewsUrl.swift in Sources */,
 				B04925A2222DA43600BDECD8 /* UIImageView.swift in Sources */,
 				B0492580222D854A00BDECD8 /* AppDelegate.swift in Sources */,

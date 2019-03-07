@@ -9,49 +9,57 @@
 import UIKit
 import CoreData
 
-class MainViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
+class MainViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     private let searchBarHeight = 40
     private let cellIdentifier = "newsCell"
-
-    private var newsLoaded: NSObjectProtocol!
     
-    private let progress = UIActivityIndicatorView()
     private var searchBar : UISearchBar!
     
     private let cacheManager = CacheManager()
     
-    private var news : [News] = []
-    private var filteredNews : [News] = []
-    
     private var isLoading = false
+    private var blockOperations = [BlockOperation]()
+    
+    private var newsLoaded: NSObjectProtocol!
+    
+    private lazy var fetchedResultsController : NSFetchedResultsController<News> = {
+        let fetchRequest : NSFetchRequest<News> = News.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor.init(key: NewsKeys.date, ascending: false)]
+        fetchRequest.fetchBatchSize = 20
+        guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
+            print("Couldn't init AppDelegate")
+            return NSFetchedResultsController<News>()
+        }
+        
+        let managedContext = delegate.persistentContainer.viewContext
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        fetchedResultsController.delegate = self
+        
+        return fetchedResultsController
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setNotification()
         setSearchBar()
-        setProgress()
         collectionView?.register(NewsCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
-
+        fetchNews()
+        cacheManager.loadNews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setLayoutOptions()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        cacheManager.fetchNews()
-    }
-    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? NewsCollectionViewCell else {
             return UICollectionViewCell()
         }
-
-        guard let info = filteredNews[indexPath.row] as News? else {
-            return UICollectionViewCell()
-        }
+        
+        let info = fetchedResultsController.object(at: indexPath)
         
         cell.titleView.text = info.title
         cell.descriptionView.text = info.descript
@@ -61,7 +69,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredNews.count
+        guard let count = fetchedResultsController.sections?[0].numberOfObjects else {return 0}
+        return count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -71,35 +80,11 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let contentOffset = scrollView.contentOffset.y
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
-        
-        if (maximumOffset - contentOffset == 0) && !isLoading {
-            cacheManager.page += 1
-            isLoading = true
-            cacheManager.fetchNews()
-        }
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredNews = searchText.isEmpty ? news : news.filter { (item: News) -> Bool in
-            return item.title!.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
-        }
-        
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.showsCancelButton = true
-    }
 
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.showsCancelButton = false
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
-        filteredNews = news
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
+        if (maximumOffset - contentOffset == 0) && !isLoading {
+            isLoading = true
+            cacheManager.page += 1
+            cacheManager.loadNews()
         }
     }
     
@@ -107,6 +92,16 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         searchBar.frame = CGRect(x: 0, y: 0, width: size.width, height: CGFloat(searchBarHeight))
     }
 
+    private func fetchNews() {
+        do {
+            try fetchedResultsController.performFetch()
+            self.collectionView.reloadData()
+
+        } catch let error {
+            print("Error: perform fetched ", error)
+        }
+    }
+    
     private func setLayoutOptions() {
         collectionView.backgroundColor = UIColor.white.withAlphaComponent(0.9)
         
@@ -128,32 +123,61 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     private func setNotification() {
         newsLoaded = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "newsLoaded"), object: nil, queue: nil) { _ in
             
-            self.news = self.cacheManager.newsList
-            self.filteredNews = self.news
             self.isLoading = false
-            DispatchQueue.main.async {
-                if !self.news.isEmpty {
-                    self.stopProgress()
-                }
-                self.collectionView.reloadData()
+        }
+    }
+
+}
+
+extension MainViewController : NSFetchedResultsControllerDelegate {
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        if type == .insert {
+            blockOperations.append(BlockOperation(block: {
+                self.collectionView.insertItems(at: [newIndexPath!])
+            }))
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView.performBatchUpdates({
+            for operation in self.blockOperations {
+                operation.start()
             }
-        }
-    }
-    
-    private func setProgress() {
-        progress.center = collectionView.center
-        progress.hidesWhenStopped = true
-        progress.color = .blue
-        collectionView.addSubview(progress)
-        DispatchQueue.main.async {
-            self.progress.startAnimating()
-        }
-    }
-    
-    private func stopProgress() {
-        DispatchQueue.main.async {
-            self.progress.stopAnimating()
-        }
+        }, completion: nil)
     }
 }
 
+extension MainViewController : UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        let searchText = searchBar.text ?? ""
+        var predicate: NSPredicate?
+        if searchText.count > 0 {
+            predicate = NSPredicate(format: "title contains[cd] %@", searchText, searchText)
+        } else {
+            predicate = nil
+        }
+        
+        fetchedResultsController.fetchRequest.predicate = predicate
+        fetchNews()
+        
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+        isLoading = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        isLoading = false
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        fetchedResultsController.fetchRequest.predicate = nil
+        fetchNews()
+    }
+}
