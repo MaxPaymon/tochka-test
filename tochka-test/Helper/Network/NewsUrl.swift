@@ -15,7 +15,14 @@ class NewsUrl {
     let apiKey = "78e1d3ac178d479eb0f9522feb82f508"
     
     func getNewsUrl(page : Int) -> String {
-        let url = "https://newsapi.org/v2/everything?q=apple&from=2019-03-03&to=2019-03-06&sortBy=publishedAt&page=\(page)&pageSize=20&apiKey=\(apiKey)"
+        let dateNow = getNowDate()
+        let url = "https://newsapi.org/v2/everything?q=apple&from=2019-03-03&to=\(dateNow)&sortBy=publishedAt&page=\(page)&pageSize=20&apiKey=\(apiKey)"
         return url
+    }
+    
+    func getNowDate() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat="yyyy-MM-dd"
+        return formatter.string(from: Date())
     }
 }

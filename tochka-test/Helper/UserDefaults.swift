@@ -10,10 +10,10 @@ import Foundation
 
 class UserDefault {
     
-    let key = "page"
+    let pageKey = "page"
     
     func getPage() -> Int {
-        let page = UserDefaults.standard.integer(forKey: key)
+        let page = UserDefaults.standard.integer(forKey: pageKey)
         if page == 0 {
             return 1
         }
@@ -21,7 +21,7 @@ class UserDefault {
     }
     
     func savePage(page : Int) {
-        UserDefaults.standard.set(page, forKey: key)
+        UserDefaults.standard.set(page, forKey: pageKey)
     }
     
 }

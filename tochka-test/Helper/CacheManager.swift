@@ -41,11 +41,21 @@ class CacheManager {
         
         managedContext = delegate.persistentContainer.viewContext
         page = userDefault.getPage()
+        
+        Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { _ in
+            self.loadActualNews()
+        }
     }
     
     func loadNews() {
         api.getNews(page: page) { news in
             self.userDefault.savePage(page: self.page)
+            self.saveNews(articles: news.articles)
+        }
+    }
+    
+    private func loadActualNews() {
+        api.getNews(page: 1) { news in
             self.saveNews(articles: news.articles)
         }
     }
